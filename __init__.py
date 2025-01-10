@@ -2,7 +2,7 @@ from .trader_engine import TraderEngine
 from .strategies import (
     Traditional,
     TechnicalAnalysis,
-    MLBased
+    MachineLearning
 )
 from .utils import LoadData
 
