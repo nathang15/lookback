@@ -1,5 +1,6 @@
 import pandas as pd
 from utils.type_convert import convert_data
+from utils.llm_helper import LLMHelper
 
 class LoadData:
     def __init__(self, prompt: str):
@@ -12,10 +13,12 @@ class LoadData:
         self._tickers.reset_index(inplace=True)
         self._tickers.rename(columns={"index": "ticker"}, inplace=True)
         self._tickers = convert_data(self._tickers)
+        self._llm_helper = LLMHelper(prompt, self._tickers)
 
     @property
     def strategy_data(self):
         return self._strategy_data
     
     def execute(self) -> None:
-        pass
+        self._llm_helper.execute_code()
+        self._strategy_data = self._llm_helper.strategy_data
