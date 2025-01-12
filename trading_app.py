@@ -3,7 +3,7 @@ from PyQt6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout,
                            QLineEdit, QPushButton, QLabel, QTableWidget, QTableWidgetItem,
                            QHeaderView, QProgressBar, QTabWidget, QScrollArea, QHBoxLayout)
 from PyQt6.QtCore import Qt, QThread, pyqtSignal, QTimer, QRectF
-from PyQt6.QtGui import QFont, QPainter, QPen, QColor
+from PyQt6.QtGui import QFont, QPainter, QPen, QColor, QIcon
 from trader_engine import TraderEngine
 from io import StringIO
 import matplotlib.pyplot as plt
@@ -425,7 +425,7 @@ class TradingApp(QMainWindow):
     def initUI(self):
         self.setWindowTitle('Trading Analysis Platform')
         self.setMinimumSize(1200, 900)
-        
+        self.setWindowIcon(QIcon('app_icon.ico'))
         # Main layout setup
         main_widget = QWidget()
         self.setCentralWidget(main_widget)
