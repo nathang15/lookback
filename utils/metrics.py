@@ -17,7 +17,7 @@ def get_metrics(df: pd.DataFrame, strategy: str) -> Dict[str, any]:
         (df["Total_Return"].count() / len(df)) * 100, 2
     )
 
-    # $10,000 investment
+    # Assuming $10,000 investment
     metrics["Equity Initial [$]"] = 10000
     metrics["Equity Final [$]"] = round(
         df["Cumulative_Return"].iloc[-1] * 10000, 2
