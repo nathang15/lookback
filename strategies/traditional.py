@@ -1,6 +1,11 @@
+from matplotlib.figure import Figure
+import pandas as pd
+import matplotlib.pyplot as plt
 from pandas import DataFrame
+from typing import List, Optional, Tuple, Dict
+import numpy as np
 from utils.metrics import get_metrics
-from typing  import List, Optional
+from utils.plot import plot_results
 
 class Traditional:
     def __init__(self):
@@ -8,16 +13,15 @@ class Traditional:
 
     def __str__(self):
         return f"Experiment with traditional simple strategies."
-    
+
     @staticmethod
-    # long strategy
-    def long(df: DataFrame = None) -> None:
+    def long(df: DataFrame = None) -> Tuple[Dict, List[Figure]]:
         original_len_cols = len(df.columns)
 
         # Calculate the returns for holding long positions
         for stock in df.columns:
             df[f"{stock}_return"] = df[stock].pct_change()
-        
+
         df["Total_Return"] = df[[col for col in df.columns if "return" in col]].mean(axis=1)
         df["Cumulative_Return"] = (1 + df["Total_Return"]).cumprod()
         df["Drawdown"] = (df["Cumulative_Return"] - df["Cumulative_Return"].cummax()) / df["Cumulative_Return"].cummax() - 1
@@ -30,23 +34,21 @@ class Traditional:
 
         # Generate outputs
         metrics = get_metrics(df, "long")
+        figures = plot_results(df, metrics)
+        
+        return metrics, figures
 
     @staticmethod
-    # short strategy
-    def short(df: DataFrame) -> None:
+    def short(df: DataFrame) -> Tuple[Dict, List[Figure]]:
         original_len_cols = len(df.columns)
 
         # Calculate returns for short positions
         for stock in df.columns:
             df[f"{stock}_return"] = -1 * df[stock].pct_change()
 
-        df["Total_Return"] = df[[col for col in df.columns if "return" in col]].mean(
-            axis=1
-        )
+        df["Total_Return"] = df[[col for col in df.columns if "return" in col]].mean(axis=1)
         df["Cumulative_Return"] = (1 + df["Total_Return"]).cumprod()
-        df["Drawdown"] = (
-            df["Cumulative_Return"] / df["Cumulative_Return"].cummax()
-        ) - 1
+        df["Drawdown"] = (df["Cumulative_Return"] / df["Cumulative_Return"].cummax()) - 1
 
         # Add market signal column
         for stock in df.columns[:original_len_cols]:
@@ -56,18 +58,19 @@ class Traditional:
 
         # Generate outputs
         metrics = get_metrics(df, "short")
+        figures = plot_results(df, metrics)
+        
+        return metrics, figures
 
     @staticmethod
-    # pair trade strategy
     def pair_trade(
         df: DataFrame = None,
         long_tickers: Optional[List[str]] = None,
         short_tickers: Optional[List[str]] = None,
-    ) -> None:
-
+    ) -> Tuple[Dict, List[Figure]]:
         original_len_cols = len(df.columns)
 
-        # Calculate returns for short positions
+        # Calculate returns
         for stock in df.columns:
             if stock in long_tickers:
                 df[f"{stock}_return"] = df[stock].pct_change()
@@ -76,13 +79,9 @@ class Traditional:
             else:
                 df[f"{stock}_return"] = 0
 
-        df["Total_Return"] = df[[col for col in df.columns if "return" in col]].mean(
-            axis=1
-        )
+        df["Total_Return"] = df[[col for col in df.columns if "return" in col]].mean(axis=1)
         df["Cumulative_Return"] = (1 + df["Total_Return"]).cumprod()
-        df["Drawdown"] = (
-            df["Cumulative_Return"] / df["Cumulative_Return"].cummax()
-        ) - 1
+        df["Drawdown"] = (df["Cumulative_Return"] / df["Cumulative_Return"].cummax()) - 1
 
         # Add market signal column
         for stock in df.columns[:original_len_cols]:
@@ -94,5 +93,8 @@ class Traditional:
                 df.loc[df.index[0], f"{stock}_signal"] = "Sell"
                 df.loc[df.index[-1], f"{stock}_signal"] = "Buy"
 
-        # Get output
+        # Generate outputs
         metrics = get_metrics(df, "pair_trade")
+        figures = plot_results(df, metrics)
+        
+        return metrics, figures
