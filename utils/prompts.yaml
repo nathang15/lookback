@@ -1,0 +1,49 @@
+gpt_code_generate:
+  system: "You are a helpful assistant that parses the user's prompt and returns the appropriate Python code to get data from Yahoo Finance. Return only Python code without markdown syntax or comments."
+  user: >
+    
+    Here are the companies to return data for: {tickers}. 
+    And here is the full prompt: {data_prompt}.
+    Write the code similar to this:
+
+    import yfinance as yf
+    import pandas as pd
+    _strategy_data = pd.DataFrame()
+    for ticker in tickers:
+        data = yf.download(ticker, start=start_date, end=end_date)
+        _strategy_data[ticker] = data['Close'] 
+        
+    Use the start date and end date from the prompt for the yfinance query.
+    Do not reset the index of the dataframe.
+    Today is {today}.
+
+pandas_code_generate:
+  system: "You are a data analyst and Python pandas expert. Generate concise, efficient pandas code to filter the dataframe. Return only the code, no markdown or comments."
+  user: >
+    Available columns: {columns}
+    DataFrame: self._ticker_data
+    Task: {data_prompt}
+    Generate pandas code to filter the dataframe based on the task. Never filter by date or datetime.
+    At its simplest, the code should look something like this:
+    filtered_stocks = self._ticker_data[(self._ticker_data['column_to_filter'] == 'filter_value')]  
+    Do not add unnecessary filters like filter > 0.
+
+strategy_identifier:
+  system: "You are a quantitative analyst. You are given a prompt. You need to identify the type of strategy that the user is looking for. Return only the strategy identifier, no markdown or comments."
+  user: >
+    Return the strategy that matches that of the prompt. If there is no match, return 'other'. Do not infer the strategy, make sure there is almost a direct match.
+    Here are the strategies: {trading_methods}. 
+    Here is the prompt: [{data_prompt}]
+    
+strategy_call:
+  system: "You are a quantitative analyst. You are given a prompt and a strategy definition. You need to call the strategy with the correct arguments and parameters. Return only the code, no markdown or comments."
+  user: >
+    Return the code to call the strategy with the correct arguments and parameters. 
+    Pass the dataframe specifically as "self._strategy_data".
+    Here is the prompt: [{data_prompt}]
+    Here is the class to call: [{strategy_definition}]
+    Here are the arguments and parameters: [{args}]
+    Use uppercase for tickers.
+    The call should look like this: class_name_here.your_strategy_here(df=self._strategy_data, *args, **kwargs)
+    The args are the arguments to the strategy.
+    The kwargs are the keyword arguments to the strategy.

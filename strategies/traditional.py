@@ -58,8 +58,8 @@ class Traditional:
         metrics = get_metrics(df, "short")
 
     @staticmethod
-    # long short strategy
-    def long_short(
+    # pair trade strategy
+    def pair_trade(
         df: DataFrame = None,
         long_tickers: Optional[List[str]] = None,
         short_tickers: Optional[List[str]] = None,
