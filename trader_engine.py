@@ -10,7 +10,8 @@ class TraderEngine:
         return f"Load tickers data from Yahoo Finance."
 
     def __init__(self):
-        self.TraditionalStrategies = Traditional()
+        self.Traditional = Traditional()
+        self.TechnicalAnalysis = TechnicalAnalysis()
 
     def set_api_key(self, api_key: str):
         openai.api_key = api_key

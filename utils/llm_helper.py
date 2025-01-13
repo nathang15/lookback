@@ -100,9 +100,11 @@ class LLMHelper:
     @_api_key_validation
     def _gpt_identify_strategy(self) -> str:
         from strategies.traditional import Traditional
+        from strategies.technical import TechnicalAnalysis
 
         strategy_classes = [
             Traditional,
+            TechnicalAnalysis,
         ]
         self._trading_methods = []
 
@@ -145,10 +147,12 @@ class LLMHelper:
     def _gpt_call_strategy(self) -> str:
         import inspect
         from strategies.traditional import Traditional
+        from strategies.technical import TechnicalAnalysis
 
         # Get attributes from multiple classes
         classes_to_inspect = [
             Traditional,
+            TechnicalAnalysis,
         ]
         all_methods = {}
 
@@ -185,11 +189,14 @@ class LLMHelper:
 
     def _gpt_call_strategy_execute(self) -> None:
         from strategies.traditional import Traditional
+        from strategies.technical import TechnicalAnalysis
+
         # Call the strategy
         namespace: Dict[str, Any] = {
             "pd": pd,
             "self": self,
             "Traditional": Traditional,
+            "TechnicalAnalysis": TechnicalAnalysis,
             "yf": yf,
             "DataFrame": DataFrame,
             "date": date,
