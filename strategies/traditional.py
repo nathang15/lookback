@@ -63,7 +63,7 @@ class Traditional:
         return metrics, figures
 
     @staticmethod
-    def pair_trade(
+    def long_short(
         df: DataFrame = None,
         long_tickers: Optional[List[str]] = None,
         short_tickers: Optional[List[str]] = None,
@@ -94,7 +94,7 @@ class Traditional:
                 df.loc[df.index[-1], f"{stock}_signal"] = "Buy"
 
         # Generate outputs
-        metrics = get_metrics(df, "pair_trade")
+        metrics = get_metrics(df, "long_short")
         figures = plot_results(df, metrics)
         
         return metrics, figures
