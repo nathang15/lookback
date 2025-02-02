@@ -6,3 +6,8 @@
 
 ### Note
 - We exclude microcaps because they are so volatile that it's not guaranteed to provide a good analysis
+
+### Build instructions
+- pyinstaller trading_app.py
+- pyinstaller trading_app.spec
+- Run the trading_app.exe file within dist directory
